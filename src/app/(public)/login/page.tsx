@@ -1,9 +1,9 @@
 "use client";
 import { loginApi } from "@/api/apilist";
 import { setCredentials } from "@/store/authSlice";
-import { useAppDispatch } from "@/TypeTs/reduxHooks";
+import { useAppDispatch, useAppSelector } from "@/TypeTs/reduxHooks";
 import Link from "next/link";
-import { useRouter } from "next/navigation";
+import { redirect, useRouter } from "next/navigation";
 import { useState } from "react";
 
 interface LoginData {
@@ -11,13 +11,14 @@ interface LoginData {
   password: string;
 }
 
-export default function page() {
+export default function Login() {
   const [formData, setFormData] = useState<LoginData>({
     email: "",
     password: "",
   });
   const [showPassword, setShowPassword] = useState<boolean>(false);
   const [error, setError] = useState<string>("");
+  const accessToken = useAppSelector((state)=>state.auth.accessToken);
 
   const dispatch = useAppDispatch();
   const router = useRouter();
@@ -38,9 +39,10 @@ export default function page() {
         })
       );
       console.log(res)
-      router.replace("/home")
+      // router.replace("/home")
     } catch (error) {}
   };
+
 
   return (
     <div className="min-h-[91vh] flex items-center justify-center bg-gray-50">

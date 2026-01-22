@@ -1,5 +1,6 @@
 "use client";
 
+import api from "@/api/api";
 import { Dispatch, SetStateAction, useState } from "react";
 
 interface CreatePostModalProps {
@@ -24,7 +25,11 @@ const CreatePostModal = ({ setOpen }: CreatePostModalProps) => {
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
-    console.log(postData);
+      try {
+        const res = api.post('/post/create',postData)
+      } catch (error) {
+        
+      }
   };
 
   return (
@@ -50,6 +55,7 @@ const CreatePostModal = ({ setOpen }: CreatePostModalProps) => {
               value={postData.title}
               onChange={handleChange}
               className="w-full px-3 py-2 border rounded-lg focus:outline-none focus:ring"
+              required
             />
           </div>
 
@@ -60,6 +66,7 @@ const CreatePostModal = ({ setOpen }: CreatePostModalProps) => {
               value={postData.categoryName}
               onChange={handleChange}
               name="categoryName"
+              required
             >
               <option value={""}>Select Category</option>
               <option value={"technology"}>Technology</option>
@@ -77,6 +84,7 @@ const CreatePostModal = ({ setOpen }: CreatePostModalProps) => {
               rows={5}
               placeholder="Write your content here..."
               className="w-full px-3 py-2 border rounded-lg focus:outline-none focus:ring"
+              required
             />
           </div>
 

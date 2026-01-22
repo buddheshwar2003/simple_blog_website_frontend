@@ -57,7 +57,7 @@ const posts: BlogPost[] = [
 
 
 // ================== Page ==================
-export default function BlogPage() {
+export default function Home() {
   return (
     <div className="min-h-[90vh] bg-gray-50">
 

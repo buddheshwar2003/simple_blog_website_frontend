@@ -1,9 +1,10 @@
 "use client";
 import api from "@/api/api";
+import Loader from "@/Components/Loader";
 import MobileNav from "@/Components/MobileNav";
 import PrivateNavbar from "@/Components/PrivateNavbar";
-import { clearAuth, setCredentials } from "@/store/authSlice";
-import { useAppDispatch } from "@/TypeTs/reduxHooks";
+import { useAppSelector } from "@/TypeTs/reduxHooks";
+import { redirect } from "next/navigation";
 import React, { useEffect } from "react";
 
 const layout = ({
@@ -11,28 +12,17 @@ const layout = ({
 }: Readonly<{
   children: React.ReactNode;
 }>) => {
-  const dispatch = useAppDispatch();
+  const { isAuthenticated ,isLoading} = useAppSelector((state) => state.auth);
+
   useEffect(() => {
-    const initAuth = async () => {
-      try {
-        // 1️⃣ Restore access token
-        const refreshRes = await api.post(
-          "/auth/refresh",
-        );
-        console.log("Usevalue",refreshRes);
-        
-        dispatch(
-          setCredentials({ accessToken: refreshRes.data.token, user: refreshRes.data.user })
-        );
-      } catch {
-        dispatch(clearAuth());
-        window.location.href = "/login";
-      }
-    };
+    if (!isAuthenticated) {
+      redirect("/login");
+    }
+  }, [isAuthenticated]);
 
-    initAuth();
-  }, []);
-
+   if (isLoading) {
+    return <Loader />; // blocking render
+  }
   return (
     <div>
       <PrivateNavbar />
