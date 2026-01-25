@@ -1,5 +1,6 @@
 "use client";
 import { loginApi } from "@/api/apilist";
+import Loader from "@/Components/Loader";
 import { setCredentials } from "@/store/authSlice";
 import { useAppDispatch, useAppSelector } from "@/TypeTs/reduxHooks";
 import Link from "next/link";
@@ -18,8 +19,7 @@ export default function Login() {
   });
   const [showPassword, setShowPassword] = useState<boolean>(false);
   const [error, setError] = useState<string>("");
-  const accessToken = useAppSelector((state)=>state.auth.accessToken);
-
+  const [loader, setLoader] = useState(false);
   const dispatch = useAppDispatch();
   const router = useRouter();
   //To Change State Data
@@ -28,8 +28,14 @@ export default function Login() {
     setError("");
     setFormData({ ...formData, [name]: value });
   };
+
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
+    if (!formData.email || !formData.password) {
+      setError("Please fill up all details!");
+      return;
+    }
+    setLoader(true);
     try {
       const res = await loginApi(formData.email, formData.password);
       dispatch(
@@ -38,16 +44,21 @@ export default function Login() {
           accessToken: res.data.token,
         })
       );
-      console.log(res)
+      console.log(res);
       // router.replace("/home")
-    } catch (error) {}
+    } catch (error) {
+      console.log(error);
+    } finally {
+      setLoader(false);
+    }
   };
-
 
   return (
     <div className="min-h-[91vh] flex items-center justify-center bg-gray-50">
+      {loader && <Loader />}
       <div className="w-full max-w-md bg-white p-8 rounded-xl shadow-lg">
         <h1 className="text-2xl font-bold text-center mb-6">Login</h1>
+        {error && <p className="text-red-500 text-sm mb-4">{error}</p>}
 
         <form className="space-y-4" onSubmit={handleSubmit}>
           <div>

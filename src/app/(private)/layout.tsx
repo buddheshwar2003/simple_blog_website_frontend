@@ -6,6 +6,8 @@ import PrivateNavbar from "@/Components/PrivateNavbar";
 import { useAppSelector } from "@/TypeTs/reduxHooks";
 import { redirect } from "next/navigation";
 import React, { useEffect } from "react";
+import { ToastContainer } from 'react-toastify';
+import 'react-toastify/dist/ReactToastify.css';
 
 const layout = ({
   children,
@@ -16,7 +18,7 @@ const layout = ({
 
   useEffect(() => {
     if (!isAuthenticated) {
-      redirect("/login");
+      redirect("/unauthenticated");
     }
   }, [isAuthenticated]);
 
@@ -25,6 +27,7 @@ const layout = ({
   }
   return (
     <div>
+      <ToastContainer />
       <PrivateNavbar />
       {children} <MobileNav />
     </div>
