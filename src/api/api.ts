@@ -3,7 +3,7 @@ import { store } from "../store/store";
 import { setCredentials, clearAuth } from "../store/authSlice";
 
 const api = axios.create({
-  baseURL: "simpleblogwebsitebackend-production.up.railway.app", // Spring Boot
+  baseURL: "https://simpleblogwebsitebackend-production.up.railway.app", // Spring Boot
   withCredentials: true, // 🔴 REQUIRED
 });
 
