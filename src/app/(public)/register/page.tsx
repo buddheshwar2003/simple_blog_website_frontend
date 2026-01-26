@@ -1,4 +1,5 @@
 "use client"
+import api from "@/api/api";
 import Loader from "@/Components/Loader";
 import axios from "axios";
 import Link from "next/link";
@@ -42,7 +43,7 @@ const Register = () => {
       return;
     }
     try {
-      const res = await axios.post("http://localhost:8080/auth/register",formData);
+      const res = await api.post("/auth/register",formData);
       console.log(res)
       if (res.status===201) {
         toast("Successfully Created your account!")
