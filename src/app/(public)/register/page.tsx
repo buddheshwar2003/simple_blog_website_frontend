@@ -1,7 +1,10 @@
 "use client"
+import Loader from "@/Components/Loader";
 import axios from "axios";
 import Link from "next/link";
+import { useRouter } from "next/navigation";
 import { useState } from "react";
+import { toast } from "react-toastify";
 
 interface SubmitData {
   name: string;
@@ -19,6 +22,8 @@ const Register = () => {
   });
   const [showPassword, setShowPassword] = useState<boolean>(false);
   const [error, setError] = useState<string>("");
+  const [loader,setLoader]=useState(false);
+  const router = useRouter();
   //To Change State Data
   const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const { name, value } = e.target;
@@ -27,6 +32,7 @@ const Register = () => {
   };
   const handleRegister = async (e: React.FormEvent) => {
     e.preventDefault();
+    setLoader(true)
     if(!formData.confirmPassword || !formData.email || !formData.name || !formData.password){
       setError("Please fill up all details!")
       return
@@ -38,15 +44,23 @@ const Register = () => {
     try {
       const res = await axios.post("http://localhost:8080/auth/register",formData);
       console.log(res)
+      if (res.status===201) {
+        toast("Successfully Created your account!")
+        router.push('/login')
+      }else{
+        throw new Error("Sonthing went wrong")
+      }
     } catch (error) {
-      
+      console.error(error)
+    }finally{
+      setLoader(false)
     }
-    // navigate("/login");
 
   };
 
   return (
     <div className="flex justify-center items-center min-h-[91vh] bg-gray-50 px-4">
+    {loader && <Loader />}
       <div className="bg-white p-8 rounded-2xl shadow-xl w-full max-w-md">
         <h2 className="text-2xl font-bold mb-6 text-center text-gray-800">
           Create Account

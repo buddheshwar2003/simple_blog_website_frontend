@@ -69,7 +69,7 @@ export default function Home() {
       setLoader(true);
       try {
         const res = await api.get(`/post/allposts?page=${page}&size=10`);
-        if (res.status === 200) {
+        if (res?.status === 200) {
           setPosts(res.data.postList);
           SetIsLastPage(res.data.last || false);
         } else {

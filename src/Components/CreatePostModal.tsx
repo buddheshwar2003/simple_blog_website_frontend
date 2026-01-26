@@ -15,16 +15,16 @@ export interface BlogPost {
 interface PostModalProps {
   open: boolean;
   setOpen: (open: boolean) => void;
-  mode: "create" | "edit";
+  mode?: "create" | "edit";
   post?: BlogPost | null;
-  onSuccess: (post: BlogPost, mode: "create" | "edit") => void;
+  onSuccess: () => void;
 }
 
 const PostModal = ({
   open,
   setOpen,
-  mode,
-  post,
+  mode = "create",
+  post = null,
   onSuccess,
 }: PostModalProps) => {
   const [formData, setFormData] = useState({
@@ -38,6 +38,14 @@ const PostModal = ({
 
   // Prefill when editing
   useEffect(() => {
+    if (mode === "create") {
+      setFormData({
+        title: "",
+        content: "",
+        category: "",
+      });
+    }
+
     if (mode === "edit" && post) {
       setFormData({
         title: post.title,
@@ -76,13 +84,21 @@ const PostModal = ({
 
       if (mode === "create") {
         res = await api.post("/post/create", formData);
-        toast.success("Post created successfully");
+        if (res.status === 201) {
+          toast.success("Post created successfully");
+        } else {
+          throw new Error("Something went Wrong");
+        }
       } else {
         res = await api.put(`/post/update/${post?.id}`, formData);
-        toast.success("Post updated successfully");
+        if (res.status === 201) {
+          toast.success("Post updated successfully");
+        } else {
+          throw new Error("Something went Wrong");
+        }
       }
 
-      onSuccess(res.data.post, mode);
+      onSuccess();
       setOpen(false);
     } catch (err) {
       toast.error("Something went wrong");
@@ -94,71 +110,85 @@ const PostModal = ({
   if (!open) return null;
 
   return (
-    <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/40">
-      <div className="bg-white w-full max-w-lg rounded-2xl p-6">
-        <div className="flex items-center justify-between mb-4">
-          <h3 className="text-lg font-semibold">
+    <div className="fixed inset-0 z-50 flex items-end sm:items-center justify-center bg-black/40">
+      <div
+        className="
+        bg-white w-full sm:max-w-lg
+        h-[95vh] sm:h-auto
+        rounded-t-2xl sm:rounded-2xl
+        flex flex-col
+      "
+      >
+        {/* Header */}
+        <div className="sticky top-0 bg-white z-10 flex items-center justify-between px-4 py-3 border-b">
+          <h3 className="text-base sm:text-lg font-semibold">
             {mode === "create" ? "Create Post" : "Edit Post"}
           </h3>
-          <button onClick={handleClose} className="text-gray-500">
+          <button onClick={handleClose} className="text-gray-500 text-xl px-2">
             ✕
           </button>
         </div>
 
-        {error && <p className="text-red-500 text-sm mb-3">{error}</p>}
+        {/* Content */}
+        <div className="flex-1 overflow-y-auto px-4 py-4">
+          {error && <p className="text-red-500 text-sm mb-3">{error}</p>}
 
-        <form onSubmit={handleSubmit} className="space-y-4">
-          <input
-            name="title"
-            value={formData.title}
-            onChange={handleChange}
-            placeholder="Post title"
-            className="w-full border px-3 py-2 rounded-lg"
-          />
+          <form onSubmit={handleSubmit} className="space-y-4">
+            <input
+              name="title"
+              value={formData.title}
+              onChange={handleChange}
+              placeholder="Post title"
+              className="w-full border px-4 py-3 rounded-xl text-sm focus:outline-none focus:ring-2 focus:ring-blue-500"
+            />
 
-          <select
-            name="category"
-            value={formData.category}
-            onChange={handleChange}
-            className="w-full border px-3 py-2 rounded-lg"
+            <select
+              name="category"
+              value={formData.category}
+              onChange={handleChange}
+              className="w-full border px-4 py-3 rounded-xl text-sm focus:outline-none focus:ring-2 focus:ring-blue-500"
+            >
+              <option value="">Select category</option>
+              <option value="technology">Technology</option>
+              <option value="programming">Programming</option>
+              <option value="design">Design</option>
+            </select>
+
+            <textarea
+              name="content"
+              rows={6}
+              value={formData.content}
+              onChange={handleChange}
+              placeholder="Write your post..."
+              className="w-full border px-4 py-3 rounded-xl text-sm resize-none focus:outline-none focus:ring-2 focus:ring-blue-500"
+            />
+          </form>
+        </div>
+
+        {/* Footer */}
+        <div className="sticky bottom-0 bg-white border-t px-4 py-3 flex gap-3">
+          <button
+            type="button"
+            onClick={handleClose}
+            className="flex-1 py-3 border rounded-xl text-sm"
           >
-            <option value="">Select category</option>
-            <option value="technology">Technology</option>
-            <option value="programming">Programming</option>
-            <option value="design">Design</option>
-          </select>
-
-          <textarea
-            name="content"
-            rows={5}
-            value={formData.content}
-            onChange={handleChange}
-            placeholder="Write your post..."
-            className="w-full border px-3 py-2 rounded-lg"
-          />
-
-          <div className="flex justify-end gap-3">
-            <button
-              type="button"
-              onClick={handleClose}
-              className="px-4 py-2 border rounded-lg"
-            >
-              Cancel
-            </button>
-            <button
-              type="submit"
-              className="px-4 py-2 bg-blue-600 text-white rounded-lg"
-            >
-              {loading
-                ? mode === "create"
-                  ? "Creating..."
-                  : "Updating..."
-                : mode === "create"
-                ? "Create"
-                : "Update"}
-            </button>
-          </div>
-        </form>
+            Cancel
+          </button>
+          <button
+            type="submit"
+            onClick={handleSubmit}
+            disabled={loading}
+            className="flex-1 py-3 bg-blue-600 text-white rounded-xl text-sm disabled:opacity-60"
+          >
+            {loading
+              ? mode === "create"
+                ? "Creating..."
+                : "Updating..."
+              : mode === "create"
+              ? "Create"
+              : "Update"}
+          </button>
+        </div>
       </div>
     </div>
   );

@@ -24,7 +24,7 @@ export default function BlogPostDetailsPage() {
       try {
         const res = await api.get(`/post/${id}`);
         setPost(res.data);
-        console.log(res)
+        console.log(res);
       } catch (err) {
         setError("Failed to load post");
       } finally {
@@ -37,38 +37,40 @@ export default function BlogPostDetailsPage() {
 
   if (loading) {
     return (
-      <div className="max-w-4xl mx-auto py-16">
-        <p className="text-gray-500">Loading post...</p>
+      <div className="max-w-3xl mx-auto px-4 py-16">
+        <p className="text-gray-500 text-sm">Loading post...</p>
       </div>
     );
   }
 
   if (error || !post) {
     return (
-      <div className="max-w-4xl mx-auto py-16">
-        <p className="text-red-500">{error || "Post not found"}</p>
+      <div className="max-w-3xl mx-auto px-4 py-16">
+        <p className="text-red-500 text-sm">{error || "Post not found"}</p>
       </div>
     );
   }
 
   return (
-    <article className="max-w-4xl mx-auto px-6 py-16">
+    <article className="max-w-3xl mx-auto px-4 sm:px-6 py-10 sm:py-16 pb-24">
       {/* Header */}
-      <header className="mb-8">
-        <h1 className="text-3xl font-bold mb-2">{post.title}</h1>
+      <header className="mb-6 sm:mb-8">
+        <h1 className="text-2xl sm:text-3xl font-bold mb-3 leading-tight">
+          {post.title}
+        </h1>
 
-        <div className="flex flex-wrap gap-4 text-sm text-gray-500">
+        <div className="flex flex-wrap items-center gap-x-3 gap-y-1 text-xs sm:text-sm text-gray-500">
           <span>By {post.author}</span>
-          <span>•</span>
+          <span className="hidden sm:inline">•</span>
           <span className="capitalize">{post.category}</span>
-          <span>•</span>
+          <span className="hidden sm:inline">•</span>
           <span>{post.updatedAt.slice(0, 10)}</span>
         </div>
       </header>
 
       {/* Content */}
-      <section className="prose max-w-none mb-8">
-        <p className="whitespace-pre-line">{post.content}</p>
+      <section className="prose prose-sm sm:prose-base max-w-none">
+        <p className="whitespace-pre-line leading-relaxed">{post.content}</p>
       </section>
     </article>
   );
