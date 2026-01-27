@@ -2,18 +2,24 @@ import { NextResponse } from "next/server";
 import type { NextRequest } from "next/server";
 
 export function middleware(request: NextRequest) {
-  const hasRefreshToken = request.cookies.has("refreshToken");
+  const refreshToken = request.cookies.get("refreshToken");
   const { pathname } = request.nextUrl;
 
-  // Public pages
-  const publicPaths = ["/", "/login", "/register"];
+  // ✅ PUBLIC ROUTES (MUST include redirect target)
+  const publicPaths = [
+    "/",
+    "/login",
+    "/register",
+    "/unauthenticated",
+  ];
 
-  if (publicPaths.includes(pathname)) {
+  // Allow public pages
+  if (publicPaths.some((path) => pathname.startsWith(path))) {
     return NextResponse.next();
   }
 
-  // If user is NOT authenticated, block everything else
-  if (!hasRefreshToken) {
+  // Block unauthenticated users
+  if (!refreshToken) {
     return NextResponse.redirect(
       new URL("/unauthenticated", request.url)
     );
