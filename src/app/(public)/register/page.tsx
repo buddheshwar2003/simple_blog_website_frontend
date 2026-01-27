@@ -1,4 +1,4 @@
-"use client"
+"use client";
 import api from "@/api/api";
 import Loader from "@/Components/Loader";
 import axios from "axios";
@@ -23,7 +23,7 @@ const Register = () => {
   });
   const [showPassword, setShowPassword] = useState<boolean>(false);
   const [error, setError] = useState<string>("");
-  const [loader,setLoader]=useState(false);
+  const [loader, setLoader] = useState(false);
   const router = useRouter();
   //To Change State Data
   const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
@@ -33,35 +33,43 @@ const Register = () => {
   };
   const handleRegister = async (e: React.FormEvent) => {
     e.preventDefault();
-    setLoader(true)
-    if(!formData.confirmPassword || !formData.email || !formData.name || !formData.password){
-      setError("Please fill up all details!")
-      return
+    setLoader(true);
+    if (
+      !formData.confirmPassword ||
+      !formData.email ||
+      !formData.name ||
+      !formData.password
+    ) {
+      setError("Please fill up all details!");
+      return;
     }
-    if(formData.password != formData.confirmPassword){
-      setError("Password and Confirm Password should be same!")
+    if (formData.password != formData.confirmPassword) {
+      setError("Password and Confirm Password should be same!");
       return;
     }
     try {
-      const res = await api.post("/auth/register",formData);
-      console.log(res)
-      if (res.status===201) {
-        toast("Successfully Created your account!")
-        router.push('/login')
-      }else{
-        throw new Error("Sonthing went wrong")
+      const res = await api.post("/auth/register", {
+        name: formData.name,
+        email: formData.email,
+        password: formData.password,
+      });
+      console.log(res);
+      if (res.status === 201) {
+        toast("Successfully Created your account!");
+        router.push("/login");
+      } else {
+        throw new Error("Sonthing went wrong");
       }
     } catch (error) {
-      console.error(error)
-    }finally{
-      setLoader(false)
+      console.error(error);
+    } finally {
+      setLoader(false);
     }
-
   };
 
   return (
     <div className="flex justify-center items-center min-h-[91vh] bg-gray-50 px-4">
-    {loader && <Loader />}
+      {loader && <Loader />}
       <div className="bg-white p-8 rounded-2xl shadow-xl w-full max-w-md">
         <h2 className="text-2xl font-bold mb-6 text-center text-gray-800">
           Create Account
