@@ -3,7 +3,8 @@ import { store } from "../store/store";
 import { setCredentials, clearAuth } from "../store/authSlice";
 
 const api = axios.create({
-  baseURL: "https://simple-blog-website-backend.onrender.com", // Spring Boot
+  // baseURL: "https://simple-blog-website-backend.onrender.com",
+  baseURL: "http://localhost:8080", // Spring Boot
   withCredentials: true, // 🔴 REQUIRED
 });
 
@@ -24,7 +25,10 @@ api.interceptors.response.use(
   async (error) => {
     const originalRequest = error.config;
 
-    if ((error.response?.status === 401 || error.response?.status === 403) && !originalRequest._retry) {
+    if (
+      (error.response?.status === 401 || error.response?.status === 403) &&
+      !originalRequest._retry
+    ) {
       originalRequest._retry = true;
 
       try {

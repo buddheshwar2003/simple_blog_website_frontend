@@ -43,14 +43,23 @@ export default function ProfilePage() {
               <h1 className="text-xl sm:text-2xl font-bold">{username}</h1>
               <p className="text-gray-500 text-sm sm:text-base">{useremail}</p>
             </div>
-
             <button
               onClick={() => {
                 setMode("create");
                 setSelectedPost(null);
                 setOpen(true);
               }}
-              className="w-full sm:w-auto px-4 py-3 sm:py-2 bg-blue-600 text-white rounded-xl"
+              className="w-full sm:w-auto px-4 py-3 sm:py-2 bg-white text-blue-600 border border-blue-600 hover:bg-gray-100 rounded-xl"
+            >
+              Edit Profile
+            </button>
+            <button
+              onClick={() => {
+                setMode("create");
+                setSelectedPost(null);
+                setOpen(true);
+              }}
+              className="w-full sm:w-auto px-4 py-3 sm:py-2 bg-blue-600 hover:bg-blue-500 text-white rounded-xl"
             >
               Create New
             </button>
