@@ -2,23 +2,10 @@
 
 import api from "@/api/api";
 import Loader from "@/Components/Loader";
-import PrivateNavbar from "@/Components/PrivateNavbar";
-import Image from "next/image";
 import Link from "next/link";
 import { useEffect, useState } from "react";
-import { BiComment, BiHeart, BiLike } from "react-icons/bi";
 import { FaRegUser } from "react-icons/fa";
-import { IoMdHeart, IoMdHeartEmpty } from "react-icons/io";
-import { LuMessageCircleMore } from "react-icons/lu";
 import { VscComment, VscHeart } from "react-icons/vsc";
-
-// // ================== Types ==================
-// interface Author {
-//   id: number;
-//   name: string;
-//   role: string;
-//   avatar: string;
-// }
 
 interface BlogPost {
   id: string;
@@ -29,40 +16,12 @@ interface BlogPost {
   updatedAt: string;
   username: string;
 }
+interface CommentData {
+  user: string;
+  text: string;
+  userId: string;
+}
 
-// // ================== Mock Data ==================
-// const posts: BlogPost[] = [
-//   {
-//     id: 1,
-//     title: "Building Scalable Apps with Next.js & TypeScript",
-//     excerpt:
-//       "A practical guide to structuring, typing, and scaling modern Next.js applications.",
-//     date: "Jan 10, 2026",
-//     readTime: "6 min read",
-//     author: {
-//       id: 1,
-//       name: "John Doe",
-//       role: "Senior Frontend Engineer",
-//       avatar: "/avatar1.png",
-//     },
-//   },
-//   {
-//     id: 2,
-//     title: "Advanced React Performance Patterns",
-//     excerpt:
-//       "Learn proven patterns to optimize rendering, state management, and data fetching.",
-//     date: "Jan 14, 2026",
-//     readTime: "8 min read",
-//     author: {
-//       id: 2,
-//       name: "Jane Smith",
-//       role: "UI Architect",
-//       avatar: "/avatar2.png",
-//     },
-//   },
-// ];
-
-// ================== Page ==================
 export default function Home() {
   const [posts, setPosts] = useState<BlogPost[] | []>([]);
   const [loader, setLoader] = useState(false);
@@ -70,6 +29,9 @@ export default function Home() {
   const [isLastPage, SetIsLastPage] = useState(false);
   const [openComment, setOpenComment] = useState<String | null>(null);
   const [comment, setComment] = useState("");
+  const [commentData, setCommentData] = useState<CommentData[] | []>([]);
+  const [commentPage, setCommentPage] = useState(0);
+  const [isCommentLastPage, SetIsCommentLastPage] = useState(false);
   useEffect(() => {
     const getPosts = async () => {
       setLoader(true);
@@ -90,9 +52,28 @@ export default function Home() {
     getPosts();
   }, [page]);
 
-  const handleNewComment = async() => {
+  useEffect(() => {
+    const getComments = async () => {
+      try {
+        const res = await api.get(
+          `/post/comments/${openComment}?page=${commentPage}&size=10`
+        );
+        if (res?.status == 200) {
+          setCommentData((prev) => [...prev, ...res.data.postList]);
+          SetIsCommentLastPage(res.data.last || false);
+        } else {
+          throw new Error("Something Went Wrong");
+        }
+      } catch (error) {}
+    };
+    getComments();
+  }, [openComment, commentPage]);
+  const handleNewComment = async () => {
     try {
-      const res = await api.post(`/post/comment`, { comment, postId: openComment });
+      const res = await api.post(`/post/comment`, {
+        comment,
+        postId: openComment,
+      });
     } catch (error) {
       console.error(error);
     }
@@ -195,7 +176,7 @@ export default function Home() {
                   <div className="border-t pt-5 flex flex-col gap-4">
                     {/* EXISTING COMMENTS */}
                     <div className="flex flex-col gap-3 max-h-52 overflow-y-auto">
-                      {post.comments?.map((comment, index) => (
+                      {commentData?.map((comment, index) => (
                         <div key={index} className="bg-gray-50 rounded-2xl p-3">
                           <p className="text-sm font-semibold text-gray-800">
                             {comment.user}
@@ -207,6 +188,16 @@ export default function Home() {
                         </div>
                       ))}
                     </div>
+                    {!isCommentLastPage && (
+                      <div className="flex flex-col gap-3 max-h-52 overflow-y-auto">
+                        <button
+                          className="text-blue-600"
+                          onClick={() => setCommentPage(commentPage + 1)}
+                        >
+                          More ↓
+                        </button>
+                      </div>
+                    )}
 
                     {/* ADD COMMENT */}
                     <div className="flex items-center gap-3">
