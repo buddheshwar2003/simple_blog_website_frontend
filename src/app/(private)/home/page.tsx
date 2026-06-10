@@ -14,8 +14,12 @@ interface BlogPost {
   content: string;
   category: string;
   author: string;
+  userId:string;
   updatedAt: string;
   username: string;
+  likeCount: number;
+  commentCount: number;
+  likedByCurrentUser: boolean;
 }
 
 export default function Home() {
