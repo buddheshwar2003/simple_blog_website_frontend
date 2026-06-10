@@ -1,10 +1,9 @@
 import axios from "axios";
 import { store } from "../store/store";
 import { setCredentials, clearAuth } from "../store/authSlice";
-
+import { serverAddressURL } from "../server/ServerAddress";
 const api = axios.create({
-  // baseURL: "https://simple-blog-website-backend.onrender.com",
-  baseURL: "http://localhost:8080", // Spring Boot
+  baseURL: serverAddressURL, // Spring Boot
   withCredentials: true, // 🔴 REQUIRED
 });
 

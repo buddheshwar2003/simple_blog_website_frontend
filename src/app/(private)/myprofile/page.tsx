@@ -20,7 +20,7 @@ export default function ProfilePage() {
 
   const fetchPosts = async () => {
     const res = await api.get(`/post/myposts?page=${page}&size=10`);
-    setPosts(res.data.postList);
+    setPosts(res.data.results);
     SetIsLastPage(res.data.last || false);
   };
   useEffect(() => {
@@ -35,7 +35,7 @@ export default function ProfilePage() {
     <div className="min-h-screen bg-gray-50">
       <main className="max-w-7xl mx-auto px-4 sm:px-6 py-6 sm:py-10">
         {/* Profile Card */}
-        <section className="bg-white border rounded-2xl p-4 sm:p-6 mb-8">
+        {/* <section className="bg-white border rounded-2xl p-4 sm:p-6 mb-8">
           <div className="flex flex-col sm:flex-row gap-4 items-start sm:items-center">
             <FaRegUser className="h-10 w-10 sm:h-12 sm:w-12" />
 
@@ -64,8 +64,63 @@ export default function ProfilePage() {
               Create New
             </button>
           </div>
-        </section>
+        </section> */}
+        <section className="bg-white rounded-3xl shadow-sm border overflow-hidden mb-8">
+          {/* Profile Content */}
+          <div className="p-6">
+            <div className="flex flex-col items-center md:flex-row md:items-end gap-5">
+              {/* Avatar */}
+              <div className="h-24 w-24 rounded-full border-4 border-white bg-gray-100 flex items-center justify-center shadow">
+                <FaRegUser className="h-12 w-12 text-gray-600" />
+              </div>
 
+              {/* User Info */}
+              <div className="flex-1 max-md:justify-center max-md:flex max-md:flex-col">
+                <h1 className="text-3xl font-bold max-md:text-center">
+                  {username}
+                </h1>
+
+                <p className="text-gray-500 max-md:text-center">
+                  {useremail}
+                </p>
+
+                <div className="flex flex-wrap gap-4 mt-3 max-md:justify-center text-sm text-gray-600">
+                  <span>
+                    <strong>128</strong> Friends
+                  </span>
+
+                  <span>
+                    <strong>{posts.length}</strong> Posts
+                  </span>
+                </div>
+              </div>
+
+              {/* Actions */}
+              <div className="flex flex-wrap gap-2">
+                <button
+                  onClick={() => {
+                    setMode("create");
+                    setSelectedPost(null);
+                    setOpen(true);
+                  }}
+                  className="w-full sm:w-auto px-4 py-3 sm:py-2 bg-white text-blue-600 border border-blue-600 hover:bg-gray-100 rounded-xl"
+                >
+                  Edit Profile
+                </button>
+                <button
+                  onClick={() => {
+                    setMode("create");
+                    setSelectedPost(null);
+                    setOpen(true);
+                  }}
+                  className="w-full sm:w-auto px-4 py-3 sm:py-2 bg-blue-600 hover:bg-blue-500 text-white rounded-xl"
+                >
+                  Create New
+                </button>
+              </div>
+            </div>
+          </div>
+        </section>
         {/* Posts */}
         <section className="max-w-6xl mx-auto">
           <h2 className="text-xl sm:text-2xl font-bold mb-4">My Posts</h2>
