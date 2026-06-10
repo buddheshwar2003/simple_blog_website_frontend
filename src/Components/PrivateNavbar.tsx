@@ -110,7 +110,7 @@ export default function Navbar() {
             </button>
             {openNotification && (
               <div className="absolute right-0 mt-2 w-96 bg-white border rounded-lg shadow-lg max-h-96 overflow-y-auto">
-                {notifications.length === 0 ? (
+                {notifications?.length === 0 ? (
                   <div className="p-4 text-gray-500">No notifications</div>
                 ) : (
                   notifications.map((n) => (
