@@ -8,6 +8,7 @@ import { clearAuth } from "@/store/authSlice";
 import { VscBell, VscBellDot } from "react-icons/vsc";
 import api from "@/api/api";
 import { connectNotificationSocket } from "@/lib/websocket";
+import { BiMessage } from "react-icons/bi";
 interface Notification {
   senderId: string;
   notificationId: string;
@@ -92,9 +93,19 @@ export default function Navbar() {
 
         <div className="max-md:hidden flex items-center justify-center gap-4">
           {/* Create Dropdown */}
+           <div className="relative flex justify-center">
+            <Link
+              className="p-2 rounded-full hover:bg-gray-100 font-medium"
+              href={"/chat/inbox"}
+            >
+              <BiMessage size={20} />
+              
+            </Link>
+           
+          </div>
           <div className="relative">
             <button
-              className="p-2 rounded-full hover:bg-gray-100 font-medium text-whiterounded-lg "
+              className="p-2 rounded-full hover:bg-gray-100 font-medium"
               onClick={() => {
                 setOpenNotification(!openNotification);
                 fetchNotifications();

@@ -12,6 +12,7 @@ import {
 
 import { useAppSelector } from "@/TypeTs/reduxHooks";
 import { store } from "@/store/store";
+import { TimeFormeter } from "@/utility/TimeFormeter";
 
 interface ChatMessage {
   id: string;
@@ -143,7 +144,7 @@ export default function ChatWindow({
           <p className="text-sm text-gray-500">
             {friend.online
               ? "Online"
-              : "Offline"}
+              : <span>Last seen at {TimeFormeter(friend?.lastSeen)}</span>}
           </p>
         </div>
       </div>
