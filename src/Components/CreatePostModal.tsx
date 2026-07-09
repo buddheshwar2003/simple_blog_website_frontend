@@ -87,6 +87,11 @@ export default function PostModal({
     const file = e.target.files?.[0];
 
     if (!file) return;
+    
+     if (file.size > 1024 * 1024) {
+        alert("Maximum image size is 1 MB");
+        return;
+    }
 
     setImage(file);
     setPreview(URL.createObjectURL(file));
