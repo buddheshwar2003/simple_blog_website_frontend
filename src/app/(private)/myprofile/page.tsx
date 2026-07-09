@@ -1,12 +1,25 @@
 "use client";
 
 import api from "@/api/api";
-import PostModal, { BlogPost } from "@/Components/CreatePostModal";
+import PostModal, {  } from "@/Components/CreatePostModal";
 import { useAppSelector } from "@/TypeTs/reduxHooks";
 import Link from "next/link";
 import { useEffect, useState } from "react";
 import { FaRegUser } from "react-icons/fa";
-
+interface BlogPost {
+  id: string;
+  title: string;
+  content: string;
+  category: string;
+  author: string;
+  userId:string;
+  updatedAt: string;
+  username: string;
+  likeCount: number;
+  commentCount: number;
+  likedByCurrentUser: boolean;
+  imageUrl?: string;
+}
 export default function ProfilePage() {
   const [posts, setPosts] = useState<BlogPost[]>([]);
   const [open, setOpen] = useState(false);

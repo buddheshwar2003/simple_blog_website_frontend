@@ -18,6 +18,7 @@ interface BlogPost {
   likeCount: number;
   commentCount: number;
   likedByCurrentUser: boolean;
+  imageUrl?: string;
 }
 interface ProfileData {
   id: string;

@@ -26,6 +26,7 @@ interface BlogPost {
   likeCount: number;
   commentCount: number;
   likedByCurrentUser: boolean;
+  imageUrl?: string;
 }
 
 export default function BlogPostDetailsPage() {
