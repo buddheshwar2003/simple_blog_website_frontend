@@ -60,7 +60,7 @@ export default function Home() {
         </div>
 
         {posts?.length > 0 ? (
-          <div className="grid items-start grid-cols-1 md:grid-cols-2 gap-8">
+          <div className="grid items-start grid-cols-1 gap-8">
             {posts?.map((post) => (
               <PostComponent post={post} key={post.id} />
             ))}

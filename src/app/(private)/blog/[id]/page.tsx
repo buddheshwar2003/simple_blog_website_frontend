@@ -191,12 +191,14 @@ export default function BlogPostDetailsPage() {
       </header>
 
       {/* Image */}
-      {post.image && (
+      {post.imageUrl && (
         <div className="relative w-full aspect-video mb-8 rounded-lg overflow-hidden bg-gray-100">
           <Image
-            src={post.image}
+            src={post.imageUrl}
             alt={post.title}
-            fill
+            width={900}
+            height={500}
+            // fill
             className="object-cover"
             priority
           />
